@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DEEP DIVE | Luxury Abyssal Expeditions & Technical Diving</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            abyss: {
+              950: '#010409',
+              900: '#020813',
+              800: '#041226',
+              700: '#072247',
+            },
+            biolum: '#00E5FF',
+            jelly: '#E87A48',
+          },
+          fontFamily: {
+            display: ['Montserrat', 'sans-serif'],
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #020813;
+      color: #FFFFFF;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Ultra-wide style sheet typography */
+    .track-hero {
+      letter-spacing: 0.42em;
+      margin-right: -0.42em;
+    }
+    .track-sub {
+      letter-spacing: 0.35em;
+      margin-right: -0.35em;
+    }
+
+    /* Anamorphic horizontal cyan light streaks from style sheet */
+    .flare-line {
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, rgba(0, 229, 255, 0.25) 20%, rgba(165, 243, 252, 0.95) 50%, rgba(0, 229, 255, 0.25) 80%, transparent 100%);
+      box-shadow: 0 0 18px 2px rgba(0, 229, 255, 0.65);
+    }
+
+    /* Interactive Flashlight Mask over Hero */
+    #flashlight-overlay {
+      --x: 50%;
+      --y: 50%;
+      --radius: 340px;
+      background: radial-gradient(
+        circle var(--radius) at var(--x) var(--y),
+        rgba(1, 4, 9, 0.03) 0%,
+        rgba(2, 8, 19, 0.55) 48%,
+        rgba(1, 4, 9, 0.97) 100%
+      );
+      transition: opacity 0.5s ease;
+    }
+
+    /* Ambient cursor ring inside hero */
+    #flashlight-ring {
+      left: var(--x, 50%);
+      top: var(--y, 50%);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #010409;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #072247;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #00E5FF;
+    }
+
+    /* Glassmorphism utility */
+    .glass-card {
+      background: rgba(4, 18, 38, 0.55);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .glass-card:hover {
+      border-color: rgba(0, 229, 255, 0.45);
+      box-shadow: 0 12px 40px -10px rgba(0, 229, 255, 0.15);
+    }
+  </style>
+</head>
+<body class="selection:bg-biolum selection:text-abyss-950">
+
+  <!-- SLIDE-OUT NAVIGATION DRAWER (Triggered by Top-Left "Explore") -->
+  <div id="nav-drawer" class="fixed inset-0 z-50 pointer-events-none opacity-0 transition-opacity duration-300">
+    <div id="nav-backdrop" class="absolute inset-0 bg-abyss-950/80 backdrop-blur-md"></div>
+    <aside id="nav-panel" class="relative z-10 w-full max-w-md h-full bg-abyss-900 border-r border-white/15 p-8 sm:p-12 flex flex-col justify-between -translate-x-full transition-transform duration-500">
+      <div>
+        <div class="flex items-center justify-between pb-8 border-b border-white/10">
+          <div>
+            <span class="block w-5 h-[2px] bg-white mb-2"></span>
+            <span class="font-display text-xs tracking-[0.3em] uppercase text-biolum">Deep Dive Navigation</span>
+          </div>
+          <button id="close-drawer" class="p-2 text-white/70 hover:text-white border border-white/15 hover:border-white/40 transition">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <nav class="mt-10 space-y-5 font-display text-sm tracking-[0.22em] uppercase">
+          <a href="#hero" class="drawer-link flex items-center justify-between py-2 text-white/80 hover:text-biolum transition">
+            <span>01. Surface / Hero</span>
+            <span class="font-mono text-xs text-white/40">0m</span>
+          </a>
+          <a href="#expeditions" class="drawer-link flex items-center justify-between py-2 text-white/80 hover:text-biolum transition">
+            <span>02. Signature Expeditions</span>
+            <span class="font-mono text-xs text-white/40">-120m</span>
+          </a>
+          <a href="#conditions" class="drawer-link flex items-center justify-between py-2 text-white/80 hover:text-biolum transition">
+            <span>03. Telemetry & Calendar</span>
+            <span class="font-mono text-xs text-white/40">-250m</span>
+          </a>
+          <a href="#safety-fleet" class="drawer-link flex items-center justify-between py-2 text-white/80 hover:text-biolum transition">
+            <span>04. Safety & Fleet</span>
+            <span class="font-mono text-xs text-white/40">-500m</span>
+          </a>
+          <a href="#equipment" class="drawer-link flex items-center justify-between py-2 text-white/80 hover:text-biolum transition">
+            <span>05. Deep Tech & Rental</span>
+            <span class="font-mono text-xs text-white/40">-750m</span>
+          </a>
+          <a href="#logbook" class="drawer-link flex items-center justify-between py-2 text-white/80 hover:text-biolum transition">
+            <span>06. The Logbook Gallery</span>
+            <span class="font-mono text-xs text-white/40">-900m</span>
+          </a>
+          <a href="#inquiries" class="drawer-link flex items-center justify-between py-2 text-white/80 hover:text-biolum transition">
+            <span>07. Direct Charter Inquiry</span>
+            <span class="font-mono text-xs text-white/40">-1000m</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="pt-6 border-t border-white/10 text-xs text-white/50 space-y-2">
+        <p class="font-mono text-biolum">SAT-COMM CH: 16 / Iridium 8816-410</p>
+        <p>Private Submersible & Closed-Circuit Expeditions</p>
+        <p class="text-white/40 pt-1">Developed by Soumyajit Halder</p>
+      </div>
+    </aside>
+  </div>
+
+  <!-- =====================================================================
+       1. HERO SECTION (CINEMATIC FIRST IMPRESSION + FLASHLIGHT REVEAL)
+  ====================================================================== -->
+  <header id="hero" class="relative w-full h-screen min-h-[700px] overflow-hidden select-none bg-abyss-950 flex flex-col justify-between">
+    
+    <!-- Layer 1: Rich Underwater Background Scene (Revealed by Flashlight) -->
+    <div class="absolute inset-0 z-0">
+      <img
+        src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=2200&q=90"
+        alt="Deep Ocean Jellyfish Background"
+        class="w-full h-full object-cover object-center scale-105 filter saturate-125 contrast-110"
+      />
+      <div class="absolute inset-0 bg-gradient-to-b from-[#03142E]/60 via-[#041B3D]/40 to-[#020813]/95"></div>
+      <!-- Animated Marine Snow Canvas -->
+      <canvas id="marine-snow" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
+    </div>
+
+    <!-- Layer 2: Interactive Pitch-Dark Flashlight Mask -->
+    <div id="flashlight-overlay" class="absolute inset-0 z-10 pointer-events-none"></div>
+    <div id="flashlight-ring" class="hidden md:block absolute z-10 w-[340px] h-[340px] rounded-full border border-biolum/15 shadow-[0_0_80px_rgba(0,229,255,0.12)]"></div>
+
+    <!-- Layer 3: Foreground Style Sheet UI & Centerpiece -->
+    <!-- Top Bar: Style Sheet "Explore" Trigger + Flashlight Controls -->
+    <div class="relative z-20 w-full max-w-7xl mx-auto px-6 sm:px-12 pt-8 sm:pt-12 flex items-start justify-between">
+      <button id="open-drawer" class="group text-left focus:outline-none" aria-label="Open Explore Menu">
+        <span class="block w-4 group-hover:w-8 h-[2px] bg-white transition-all duration-300 mb-2"></span>
+        <span class="font-sans text-xs sm:text-sm tracking-[0.18em] text-white/95 group-hover:text-biolum transition">Explore</span>
+      </button>
+
+      <div class="flex items-center gap-3 sm:gap-5">
+        <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-abyss-900/70 border border-white/15 text-[11px] font-mono text-white/75">
+          <span class="w-2 h-2 rounded-full bg-biolum animate-pulse"></span>
+          <span>BEAM ACTIVE: MOVE CURSOR</span>
+        </div>
+        <button id="toggle-floodlight" class="px-3.5 py-1.5 text-[11px] font-mono uppercase tracking-wider border border-white/25 bg-abyss-900/60 hover:border-biolum hover:text-biolum transition">
+          Floodlight: OFF
+        </button>
+      </div>
+    </div>
+
+    <!-- Centerpiece: Framed "D E E P / O C E A N" with Jellyfish Depth Accent -->
+    <div class="relative z-20 my-auto px-4 flex flex-col items-center text-center">
+      <!-- Floating Decorative Jellyfish Accent on Left of Title (Matching Style Sheet) -->
+      <div class="relative max-w-4xl w-full flex flex-col items-center">
+        <span class="font-mono text-[11px] uppercase tracking-[0.4em] text-biolum/90 mb-5">
+          11°21'N 142°12'E • Abyssal Charter Division
+        </span>
+
+        <!-- Upper Horizontal Cyan Flare Line -->
+        <div class="w-64 sm:w-[460px] flare-line mb-4 sm:mb-6"></div>
+
+        <!-- Main Ultra-Wide Tracked Display Title -->
+        <h1 class="font-display font-extralight text-white text-5xl sm:text-7xl md:text-8xl lg:text-[6.5rem] leading-none uppercase track-hero drop-shadow-[0_0_30px_rgba(0,229,255,0.3)]">
+          DEEP
+        </h1>
+
+        <!-- Lower Horizontal Cyan Flare Line -->
+        <div class="w-64 sm:w-[460px] flare-line mt-4 sm:mt-6 mb-5 sm:mb-7"></div>
+
+        <!-- Subtitle Matching Style Sheet -->
+        <p class="font-display font-light text-white/90 text-lg sm:text-2xl md:text-3xl uppercase track-sub">
+          OCEAN
+        </p>
+
+        <p class="mt-6 max-w-lg text-xs sm:text-sm text-white/65 font-light leading-relaxed">
+          Bespoke manned submersible descents and closed-circuit technical expeditions into Earth's most remote bioluminescent trenches.
+        </p>
+      </div>
+    </div>
+
+    <!-- Bottom Center CTA: Exact Style Sheet 1px White-Bordered Rectangular Button -->
+    <div class="relative z-20 w-full pb-10 sm:pb-14 flex flex-col items-center gap-4">
+      <a
+        href="#expeditions"
+        class="inline-flex items-center justify-center w-44 sm:w-52 py-3.5 border border-white/85 bg-abyss-900/40 backdrop-blur-sm text-white text-xs font-display tracking-[0.28em] uppercase hover:bg-white hover:text-abyss-950 hover:shadow-[0_0_25px_rgba(255,255,255,0.5)] transition duration-300"
+      >
+        DIVE IN
+      </a>
+      <span class="font-mono text-[10px] tracking-[0.25em] text-white/40 uppercase">Scroll to Descend</span>
+    </div>
+  </header>
+
+  <!-- =====================================================================
+       2. FEATURED EXPEDITIONS & SIGNATURE DIVES
+  ====================================================================== -->
+  <section id="expeditions" class="relative py-24 sm:py-32 px-6 sm:px-12 max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+      <div>
+        <div class="flex items-center gap-3 text-biolum font-mono text-xs uppercase tracking-[0.3em] mb-3">
+          <span>02 // Depth Zone: 100m – 1,000m</span>
+        </div>
+        <h2 class="font-display font-light text-3xl sm:text-5xl uppercase tracking-[0.18em]">
+          Signature Expeditions
+        </h2>
+      </div>
+      <p class="max-w-md text-sm text-white/65 leading-relaxed">
+        Every descent is supported by our private research vessel, onboard hyperbaric doctors, and custom hypoxic trimix blending stations.
+      </p>
+    </div>
+
+    <!-- 3 Luxury Expedition Cards -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Card 1 -->
+      <article class="glass-card rounded-sm overflow-hidden flex flex-col justify-between transition duration-300 group">
+        <div>
+          <div class="relative h-64 overflow-hidden">
+            <img
+              src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=1000&q=80"
+              alt="Mariana Trench Submersible Descent"
+              class="w-full h-full object-cover group-hover:scale-105 transition duration-700"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-abyss-900 via-abyss-900/20 to-transparent"></div>
+            <span class="absolute top-4 left-4 px-3 py-1 bg-abyss-950/85 border border-biolum/40 font-mono text-[11px] text-biolum uppercase">
+              Max Depth: 1,000m
+            </span>
+            <span class="absolute top-4 right-4 px-3 py-1 bg-abyss-950/85 border border-white/15 font-mono text-[11px] text-white/80">
+              7 Days
+            </span>
+          </div>
+
+          <div class="p-7">
+            <p class="font-mono text-xs text-jelly uppercase tracking-widest mb-1">Guam / Challenger Basalt Rim</p>
+            <h3 class="font-display text-xl tracking-[0.12em] uppercase text-white mb-3">
+              Mariana Bathypelagic Descent
+            </h3>
+            <p class="text-sm text-white/65 leading-relaxed mb-6">
+              Board our 3-person acrylic-hulled Triton submersible for an unhurried six-hour benthic survey across hydrothermal chimneys and six-gill shark hunting grounds.
+            </p>
+
+            <div class="grid grid-cols-2 gap-3 pt-4 border-t border-white/10 font-mono text-xs">
+              <div>
+                <span class="text-white/40 block">WATER TEMP</span>
+                <span class="text-white">2.4°C – 4.1°C</span>
+              </div>
+              <div>
+                <span class="text-white/40 block">CERTIFICATION</span>
+                <span class="text-biolum">Sub-Pilot / Any</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="px-7 pb-7 pt-3 flex items-center justify-between border-t border-white/10">
+          <div>
+            <span class="text-[11px] font-mono text-white/40 block">PRIVATE CHARTER</span>
+            <span class="font-display text-lg tracking-wider text-white">$48,500 <span class="text-xs text-white/50">/ berth</span></span>
+          </div>
+          <button
+            onclick="openExpeditionModal(0)"
+            class="px-5 py-2.5 border border-white/60 text-xs font-display tracking-[0.2em] uppercase hover:bg-white hover:text-abyss-950 transition"
+          >
+            Dossier
+          </button>
+        </div>
+      </article>
+
+      <!-- Card 2 -->
+      <article class="glass-card rounded-sm overflow-hidden flex flex-col justify-between transition duration-300 group">
+        <div>
+          <div class="relative h-64 overflow-hidden">
+            <img
+              src="https://images.unsplash.com/photo-1545671913-b89ac1b4ac10?auto=format&fit=crop&w=1000&q=80"
+              alt="Raja Ampat Bioluminescent Drift"
+              class="w-full h-full object-cover group-hover:scale-105 transition duration-700"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-abyss-900 via-abyss-900/20 to-transparent"></div>
+            <span class="absolute top-4 left-4 px-3 py-1 bg-abyss-950/85 border border-biolum/40 font-mono text-[11px] text-biolum uppercase">
+              Max Depth: 115m
+            </span>
+            <span class="absolute top-4 right-4 px-3 py-1 bg-abyss-950/85 border border-white/15 font-mono text-[11px] text-white/80">
+              10 Days
+            </span>
+          </div>
+
+          <div class="p-7">
+            <p class="font-mono text-xs text-jelly uppercase tracking-widest mb-1">Indonesia / Dampier Strait</p>
+            <h3 class="font-display text-xl tracking-[0.12em] uppercase text-white mb-3">
+              Raja Ampat Nocturnal Drift
+            </h3>
+            <p class="text-sm text-white/65 leading-relaxed mb-6">
+              Silent closed-circuit rebreather (CCR) night descents along vertical seamounts illuminated entirely by blue-wavelength fluor-excitation filters and bioluminescent medusae.
+            </p>
+
+            <div class="grid grid-cols-2 gap-3 pt-4 border-t border-white/10 font-mono text-xs">
+              <div>
+                <span class="text-white/40 block">WATER TEMP</span>
+                <span class="text-white">21.0°C – 26.5°C</span>
+              </div>
+              <div>
+                <span class="text-white/40 block">CERTIFICATION</span>
+                <span class="text-biolum">TDI / GUE CCR</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="px-7 pb-7 pt-3 flex items-center justify-between border-t border-white/10">
+          <div>
+            <span class="text-[11px] font-mono text-white/40 block">PRIVATE CHARTER</span>
+            <span class="font-display text-lg tracking-wider text-white">$24,900 <span class="text-xs text-white/50">/ berth</span></span>
+          </div>
+          <button
+            onclick="openExpeditionModal(1)"
+            class="px-5 py-2.5 border border-white/60 text-xs font-display tracking-[0.2em] uppercase hover:bg-white hover:text-abyss-950 transition"
+          >
+            Dossier
+          </button>
+        </div>
+      </article>
+
+      <!-- Card 3 -->
+      <article class="glass-card rounded-sm overflow-hidden flex flex-col justify-between transition duration-300 group">
+        <div>
+          <div class="relative h-64 overflow-hidden">
+            <img
+              src="https://images.unsplash.com/photo-1682687982501-1e58ab814714?auto=format&fit=crop&w=1000&q=80"
+              alt="Blue Hole Abyssal Cavern"
+              class="w-full h-full object-cover group-hover:scale-105 transition duration-700"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-abyss-900 via-abyss-900/20 to-transparent"></div>
+            <span class="absolute top-4 left-4 px-3 py-1 bg-abyss-950/85 border border-biolum/40 font-mono text-[11px] text-biolum uppercase">
+              Max Depth: 145m
+            </span>
+            <span class="absolute top-4 right-4 px-3 py-1 bg-abyss-950/85 border border-white/15 font-mono text-[11px] text-white/80">
+              6 Days
+            </span>
+          </div>
+
+          <div class="p-7">
+            <p class="font-mono text-xs text-jelly uppercase tracking-widest mb-1">Red Sea / Dahab Arch</p>
+            <h3 class="font-display text-xl tracking-[0.12em] uppercase text-white mb-3">
+              Benthic Sinkhole & Arch
+            </h3>
+            <p class="text-sm text-white/65 leading-relaxed mb-6">
+              Penetrate the legendary cathedral arch on custom heliox mixes with staged decompression habitats, personal DPV propulsion scooters, and surface-to-diver optical comms.
+            </p>
+
+            <div class="grid grid-cols-2 gap-3 pt-4 border-t border-white/10 font-mono text-xs">
+              <div>
+                <span class="text-white/40 block">WATER TEMP</span>
+                <span class="text-white">18.5°C – 22.0°C</span>
+              </div>
+              <div>
+                <span class="text-white/40 block">CERTIFICATION</span>
+                <span class="text-biolum">PADI Tec 100 / Cave</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="px-7 pb-7 pt-3 flex items-center justify-between border-t border-white/10">
+          <div>
+            <span class="text-[11px] font-mono text-white/40 block">PRIVATE CHARTER</span>
+            <span class="font-display text-lg tracking-wider text-white">$19,200 <span class="text-xs text-white/50">/ berth</span></span>
+          </div>
+          <button
+            onclick="openExpeditionModal(2)"
+            class="px-5 py-2.5 border border-white/60 text-xs font-display tracking-[0.2em] uppercase hover:bg-white hover:text-abyss-950 transition"
+          >
+            Dossier
+          </button>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       3. REAL-TIME CONDITIONS & DIVE CALENDAR
+  ====================================================================== -->
+  <section id="conditions" class="py-24 sm:py-32 bg-abyss-950/80 border-y border-white/10">
+    <div class="max-w-7xl mx-auto px-6 sm:px-12">
+      
+      <!-- Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+        <div>
+          <span class="text-biolum font-mono text-xs uppercase tracking-[0.3em] block mb-3">
+            03 // Live Oceanographic Buoy #DD-09
+          </span>
+          <h2 class="font-display font-light text-3xl sm:text-5xl uppercase tracking-[0.18em]">
+            Telemetry & Dive Calendar
+          </h2>
+        </div>
+        <div class="flex items-center gap-3 font-mono text-xs text-white/60">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+          <span>BUOY LINK: ONLINE (UPDATED <span id="telemetry-clock">JUST NOW</span>)</span>
+        </div>
+      </div>
+
+      <!-- Real-Time Ocean Telemetry Bar -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-16">
+        <div class="glass-card p-5 rounded-sm">
+          <span class="font-mono text-[11px] text-white/45 uppercase block mb-1">Thermocline (40m)</span>
+          <div class="flex items-baseline justify-between">
+            <span id="stat-temp" class="font-mono text-2xl sm:text-3xl text-white">16.4°C</span>
+            <span class="text-xs font-mono text-biolum">Stable</span>
+          </div>
+        </div>
+        <div class="glass-card p-5 rounded-sm">
+          <span class="font-mono text-[11px] text-white/45 uppercase block mb-1">Vertical Visibility</span>
+          <div class="flex items-baseline justify-between">
+            <span id="stat-vis" class="font-mono text-2xl sm:text-3xl text-white">46.0m</span>
+            <span class="text-xs font-mono text-emerald-400">Optimal</span>
+          </div>
+        </div>
+        <div class="glass-card p-5 rounded-sm">
+          <span class="font-mono text-[11px] text-white/45 uppercase block mb-1">Surface Swell</span>
+          <div class="flex items-baseline justify-between">
+            <span id="stat-swell" class="font-mono text-2xl sm:text-3xl text-white">0.4m</span>
+            <span class="text-xs font-mono text-white/50">11s Period</span>
+          </div>
+        </div>
+        <div class="glass-card p-5 rounded-sm">
+          <span class="font-mono text-[11px] text-white/45 uppercase block mb-1">Benthic Current</span>
+          <div class="flex items-baseline justify-between">
+            <span id="stat-current" class="font-mono text-2xl sm:text-3xl text-white">0.8 kt</span>
+            <span class="text-xs font-mono text-white/50">NNE Drift</span>
+          </div>
+        </div>
+        <div class="glass-card p-5 rounded-sm col-span-2 sm:col-span-1">
+          <span class="font-mono text-[11px] text-white/45 uppercase block mb-1">Lunar Biolum Index</span>
+          <div class="flex items-baseline justify-between">
+            <span class="font-mono text-2xl sm:text-3xl text-jelly">94%</span>
+            <span class="text-xs font-mono text-white/60">New Moon</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filterable Dive Calendar -->
+      <div class="glass-card p-6 sm:p-10 rounded-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-white/10">
+          <h3 class="font-display text-lg uppercase tracking-[0.2em]">Upcoming Vessel Departures</h3>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="filterCalendar('all')" class="cal-filter-btn active px-4 py-1.5 text-xs font-mono uppercase border border-biolum bg-biolum/15 text-biolum transition" data-filter="all">All Tiers</button>
+            <button onclick="filterCalendar('submersible')" class="cal-filter-btn px-4 py-1.5 text-xs font-mono uppercase border border-white/15 text-white/70 hover:border-white/40 transition" data-filter="submersible">Submersible (1000m)</button>
+            <button onclick="filterCalendar('ccr')" class="cal-filter-btn px-4 py-1.5 text-xs font-mono uppercase border border-white/15 text-white/70 hover:border-white/40 transition" data-filter="ccr">CCR Rebreather (100m+)</button>
+          </div>
+        </div>
+
+        <div id="calendar-list" class="divide-y divide-white/10">
+          <!-- Row 1 -->
+          <div class="cal-row py-5 flex flex-col md:flex-row md:items-center justify-between gap-4" data-category="submersible">
+            <div class="space-y-1">
+              <span class="font-mono text-xs text-biolum">DEC 14 – DEC 20, 2026</span>
+              <h4 class="font-display text-base uppercase tracking-wider">Mariana Bathypelagic Descent (Leg I)</h4>
+              <p class="text-xs text-white/50">Vessel: M/Y Abyssal Sovereign • Submersible: Triton 3300/3</p>
+            </div>
+            <div class="flex items-center gap-6">
+              <div class="text-right font-mono">
+                <span class="block text-xs text-emerald-400">2 BERTHS REMAINING</span>
+                <span class="text-sm text-white">$48,500 / guest</span>
+              </div>
+              <button onclick="selectExpeditionForInquiry('Mariana Bathypelagic Descent (Dec 14 - Dec 20)')" class="px-4 py-2 border border-white/70 text-xs font-display tracking-[0.18em] uppercase hover:bg-white hover:text-abyss-950 transition">
+                Reserve
+              </button>
+            </div>
+          </div>
+
+          <!-- Row 2 -->
+          <div class="cal-row py-5 flex flex-col md:flex-row md:items-center justify-between gap-4" data-category="ccr">
+            <div class="space-y-1">
+              <span class="font-mono text-xs text-biolum">JAN 08 – JAN 17, 2027</span>
+              <h4 class="font-display text-base uppercase tracking-wider">Raja Ampat Nocturnal Fluor-Drift</h4>
+              <p class="text-xs text-white/50">Vessel: M/Y Abyssal Sovereign • Mode: Closed-Circuit Rebreather</p>
+            </div>
+            <div class="flex items-center gap-6">
+              <div class="text-right font-mono">
+                <span class="block text-xs text-amber-400">1 BERTH REMAINING</span>
+                <span class="text-sm text-white">$24,900 / guest</span>
+              </div>
+              <button onclick="selectExpeditionForInquiry('Raja Ampat Nocturnal Fluor-Drift (Jan 08 - Jan 17)')" class="px-4 py-2 border border-white/70 text-xs font-display tracking-[0.18em] uppercase hover:bg-white hover:text-abyss-950 transition">
+                Reserve
+              </button>
+            </div>
+          </div>
+
+          <!-- Row 3 -->
+          <div class="cal-row py-5 flex flex-col md:flex-row md:items-center justify-between gap-4" data-category="ccr">
+            <div class="space-y-1">
+              <span class="font-mono text-xs text-biolum">FEB 19 – FEB 24, 2027</span>
+              <h4 class="font-display text-base uppercase tracking-wider">Dahab Benthic Sinkhole & Arch</h4>
+              <p class="text-xs text-white/50">Red Sea Technical Base • Mode: Heliox Trimix & Habitat</p>
+            </div>
+            <div class="flex items-center gap-6">
+              <div class="text-right font-mono">
+                <span class="block text-xs text-emerald-400">4 BERTHS REMAINING</span>
+                <span class="text-sm text-white">$19,200 / guest</span>
+              </div>
+              <button onclick="selectExpeditionForInquiry('Dahab Benthic Sinkhole & Arch (Feb 19 - Feb 24)')" class="px-4 py-2 border border-white/70 text-xs font-display tracking-[0.18em] uppercase hover:bg-white hover:text-abyss-950 transition">
+                Reserve
+              </button>
+            </div>
+          </div>
+
+          <!-- Row 4 -->
+          <div class="cal-row py-5 flex flex-col md:flex-row md:items-center justify-between gap-4" data-category="submersible">
+            <div class="space-y-1">
+              <span class="font-mono text-xs text-biolum">MAR 11 – MAR 18, 2027</span>
+              <h4 class="font-display text-base uppercase tracking-wider">Tonga Trench Hadal Rim Survey</h4>
+              <p class="text-xs text-white/50">Vessel: M/Y Abyssal Sovereign • Submersible: Triton 3300/3</p>
+            </div>
+            <div class="flex items-center gap-6">
+              <div class="text-right font-mono">
+                <span class="block text-xs text-emerald-400">3 BERTHS REMAINING</span>
+                <span class="text-sm text-white">$52,000 / guest</span>
+              </div>
+              <button onclick="selectExpeditionForInquiry('Tonga Trench Hadal Rim Survey (Mar 11 - Mar 18)')" class="px-4 py-2 border border-white/70 text-xs font-display tracking-[0.18em] uppercase hover:bg-white hover:text-abyss-950 transition">
+                Reserve
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       4. SAFETY, STANDARDS & FLEET BREAKDOWN
+  ====================================================================== -->
+  <section id="safety-fleet" class="py-24 sm:py-32 px-6 sm:px-12 max-w-7xl mx-auto">
+    <div class="mb-16">
+      <span class="text-biolum font-mono text-xs uppercase tracking-[0.3em] block mb-3">
+        04 // Redundancy & Engineering
+      </span>
+      <h2 class="font-display font-light text-3xl sm:text-5xl uppercase tracking-[0.18em]">
+        Safety Standards & Fleet
+      </h2>
+    </div>
+
+    <!-- 4 Safety Pillars -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+      <div class="glass-card p-6 rounded-sm">
+        <i data-lucide="shield-check" class="w-7 h-7 text-biolum mb-4"></i>
+        <h3 class="font-display text-sm uppercase tracking-[0.15em] mb-2">Multi-Lock Hyperbaric</h3>
+        <p class="text-xs text-white/65 leading-relaxed">
+          Onboard ASME PVHO-1 certified twin-lock recompression chamber staffed 24/7 by a specialized dive medicine physician.
+        </p>
+      </div>
+      <div class="glass-card p-6 rounded-sm">
+        <i data-lucide="cpu" class="w-7 h-7 text-biolum mb-4"></i>
+        <h3 class="font-display text-sm uppercase tracking-[0.15em] mb-2">Dual CCR Redundancy</h3>
+        <p class="text-xs text-white/65 leading-relaxed">
+          Every mixed-gas diver descends with dual independent oxygen controllers, HUD PPO2 monitors, and full bailout rebreather blocks.
+        </p>
+      </div>
+      <div class="glass-card p-6 rounded-sm">
+        <i data-lucide="radio" class="w-7 h-7 text-biolum mb-4"></i>
+        <h3 class="font-display text-sm uppercase tracking-[0.15em] mb-2">Optical & USBL Tracking</h3>
+        <p class="text-xs text-white/65 leading-relaxed">
+          Real-time Ultra-Short Baseline (USBL) acoustic positioning tracks every diver's depth, heart rate, and tank pressure from the bridge.
+        </p>
+      </div>
+      <div class="glass-card p-6 rounded-sm">
+        <i data-lucide="users" class="w-7 h-7 text-biolum mb-4"></i>
+        <h3 class="font-display text-sm uppercase tracking-[0.15em] mb-2">1:1 Expedition Ratio</h3>
+        <p class="text-xs text-white/65 leading-relaxed">
+          Each guest is paired 1-on-1 with a GUE Tech 2 or PADI TecRec Instructor Trainer holding over 1,500 logged deep trimix hours.
+        </p>
+      </div>
+    </div>
+
+    <!-- Interactive Fleet Showcase -->
+    <div class="glass-card rounded-sm overflow-hidden">
+      <div class="flex border-b border-white/15">
+        <button
+          onclick="switchFleetTab(0)"
+          id="fleet-tab-0"
+          class="flex-1 py-5 px-6 font-display text-xs sm:text-sm uppercase tracking-[0.2em] bg-biolum/15 text-biolum border-b-2 border-biolum transition"
+        >
+          01. Flagship Yacht — M/Y Abyssal Sovereign
+        </button>
+        <button
+          onclick="switchFleetTab(1)"
+          id="fleet-tab-1"
+          class="flex-1 py-5 px-6 font-display text-xs sm:text-sm uppercase tracking-[0.2em] text-white/60 hover:text-white transition"
+        >
+          02. Submersible — Triton 3300/3 MKII
+        </button>
+      </div>
+
+      <div id="fleet-content" class="grid grid-cols-1 lg:grid-cols-12 items-center">
+        <div class="lg:col-span-7 h-80 sm:h-[420px] relative">
+          <img
+            id="fleet-img"
+            src="https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?auto=format&fit=crop&w=1400&q=85"
+            alt="M/Y Abyssal Sovereign"
+            class="w-full h-full object-cover"
+          />
+          <div class="absolute inset-0 bg-gradient-to-r from-transparent to-abyss-900/90 hidden lg:block"></div>
+        </div>
+        <div class="lg:col-span-5 p-8 sm:p-10 space-y-6">
+          <div>
+            <span id="fleet-badge" class="font-mono text-xs text-jelly uppercase tracking-widest">68-Meter Ice-Class Support Yacht</span>
+            <h3 id="fleet-title" class="font-display text-2xl sm:text-3xl uppercase tracking-[0.15em] mt-1">
+              M/Y Abyssal Sovereign
+            </h3>
+          </div>
+          <p id="fleet-desc" class="text-sm text-white/70 leading-relaxed">
+            Custom-built in Norway and refitted for ultra-luxury oceanographic exploration. Features dynamic positioning (DP2), an A-frame hydraulic submersible launch hangar, a wet-porch trimix blending lab, and six panoramic owner-grade staterooms.
+          </p>
+          <div class="grid grid-cols-2 gap-4 pt-4 border-t border-white/10 font-mono text-xs">
+            <div>
+              <span class="text-white/40 block">CRUISING RANGE</span>
+              <span id="fleet-spec-1" class="text-white text-sm">6,500 Nautical Miles</span>
+            </div>
+            <div>
+              <span class="text-white/40 block">GUEST CAPACITY</span>
+              <span id="fleet-spec-2" class="text-white text-sm">12 Guests / 22 Crew</span>
+            </div>
+            <div>
+              <span class="text-white/40 block">GAS BLENDING</span>
+              <span id="fleet-spec-3" class="text-biolum text-sm">Continuous Heliox / O2</span>
+            </div>
+            <div>
+              <span class="text-white/40 block">SONAR ARRAY</span>
+              <span id="fleet-spec-4" class="text-white text-sm">Kongsberg EM 2040</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       5. DEEP TECH & RENTAL EQUIPMENT (WITH INTERACTIVE CALCULATOR)
+  ====================================================================== -->
+  <section id="equipment" class="py-24 sm:py-32 bg-abyss-950/80 border-y border-white/10">
+    <div class="max-w-7xl mx-auto px-6 sm:px-12">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+        <div>
+          <span class="text-biolum font-mono text-xs uppercase tracking-[0.3em] block mb-3">
+            05 // Mission Hardware & Armory
+          </span>
+          <h2 class="font-display font-light text-3xl sm:text-5xl uppercase tracking-[0.18em]">
+            Deep Tech & Rental Locker
+          </h2>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button onclick="filterGear('all')" class="gear-filter-btn px-4 py-1.5 text-xs font-mono uppercase border border-biolum bg-biolum/15 text-biolum transition" data-gear="all">All Hardware</button>
+          <button onclick="filterGear('rebreather')" class="gear-filter-btn px-4 py-1.5 text-xs font-mono uppercase border border-white/15 text-white/70 hover:border-white/40 transition" data-gear="rebreather">Rebreathers</button>
+          <button onclick="filterGear('telemetry')" class="gear-filter-btn px-4 py-1.5 text-xs font-mono uppercase border border-white/15 text-white/70 hover:border-white/40 transition" data-gear="telemetry">Computers & Propulsion</button>
+          <button onclick="filterGear('cinema')" class="gear-filter-btn px-4 py-1.5 text-xs font-mono uppercase border border-white/15 text-white/70 hover:border-white/40 transition" data-gear="cinema">Abyssal Cinema</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <!-- Equipment Cards Grid -->
+        <div class="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+          
+          <!-- Gear 1 -->
+          <div class="gear-card glass-card p-6 rounded-sm flex flex-col justify-between" data-category="rebreather">
+            <div>
+              <div class="flex items-center justify-between font-mono text-xs text-biolum mb-2">
+                <span>CLOSED-CIRCUIT CCR</span>
+                <span>$220 / DAY</span>
+              </div>
+              <h3 class="font-display text-lg uppercase tracking-wider mb-2">AP Inspiration Evo+ CCR</h3>
+              <p class="text-xs text-white/65 leading-relaxed mb-4">
+                Dual Vision electronics with Head-Up Display, radial CO2 scrubber, and 3L carbon-wrapped diluent/oxygen cylinders pre-packed with Sofnolime 797.
+              </p>
+            </div>
+            <label class="flex items-center justify-between pt-4 border-t border-white/10 cursor-pointer text-xs font-mono">
+              <span class="text-white/80">ADD TO CHARTER RIG</span>
+              <input type="checkbox" class="gear-checkbox w-4 h-4 accent-cyan-400" data-name="AP Inspiration Evo+ CCR" data-price="220" onchange="updateGearTotal()" />
+            </label>
+          </div>
+
+          <!-- Gear 2 -->
+          <div class="gear-card glass-card p-6 rounded-sm flex flex-col justify-between" data-category="telemetry">
+            <div>
+              <div class="flex items-center justify-between font-mono text-xs text-biolum mb-2">
+                <span>DECOMPRESSION COMPUTER</span>
+                <span>$65 / DAY</span>
+              </div>
+              <h3 class="font-display text-lg uppercase tracking-wider mb-2">Shearwater Perdix 2 Ti</h3>
+              <p class="text-xs text-white/65 leading-relaxed mb-4">
+                Titanium bezel multi-gas trimix decompression computer featuring Bühlmann ZHL-16C with Gradient Factors and quad wireless Swift AI transmitters.
+              </p>
+            </div>
+            <label class="flex items-center justify-between pt-4 border-t border-white/10 cursor-pointer text-xs font-mono">
+              <span class="text-white/80">ADD TO CHARTER RIG</span>
+              <input type="checkbox" class="gear-checkbox w-4 h-4 accent-cyan-400" data-name="Shearwater Perdix 2 Ti" data-price="65" onchange="updateGearTotal()" checked />
+            </label>
+          </div>
+
+          <!-- Gear 3 -->
+          <div class="gear-card glass-card p-6 rounded-sm flex flex-col justify-between" data-category="telemetry">
+            <div>
+              <div class="flex items-center justify-between font-mono text-xs text-biolum mb-2">
+                <span>DPV PROPULSION SCOOTER</span>
+                <span>$180 / DAY</span>
+              </div>
+              <h3 class="font-display text-lg uppercase tracking-wider mb-2">Suex XK1 Abyssal DPV</h3>
+              <p class="text-xs text-white/65 leading-relaxed mb-4">
+                200m depth-rated technical scooter with 330-minute Li-Ion runtime, Calypso navigation dashboard, and dead-man magnetic trigger.
+              </p>
+            </div>
+            <label class="flex items-center justify-between pt-4 border-t border-white/10 cursor-pointer text-xs font-mono">
+              <span class="text-white/80">ADD TO CHARTER RIG</span>
+              <input type="checkbox" class="gear-checkbox w-4 h-4 accent-cyan-400" data-name="Suex XK1 Abyssal DPV" data-price="180" onchange="updateGearTotal()" />
+            </label>
+          </div>
+
+          <!-- Gear 4 -->
+          <div class="gear-card glass-card p-6 rounded-sm flex flex-col justify-between" data-category="cinema">
+            <div>
+              <div class="flex items-center justify-between font-mono text-xs text-biolum mb-2">
+                <span>8K DIGITAL CINEMA RIG</span>
+                <span>$390 / DAY</span>
+              </div>
+              <h3 class="font-display text-lg uppercase tracking-wider mb-2">RED V-Raptor + Gates Deep</h3>
+              <p class="text-xs text-white/65 leading-relaxed mb-4">
+                Machined aluminum housing with glass dome port and dual 15,000-lumen Keldan CRI-96 ambient spectrum strobes + fluor-blue excitation arrays.
+              </p>
+            </div>
+            <label class="flex items-center justify-between pt-4 border-t border-white/10 cursor-pointer text-xs font-mono">
+              <span class="text-white/80">ADD TO CHARTER RIG</span>
+              <input type="checkbox" class="gear-checkbox w-4 h-4 accent-cyan-400" data-name="RED V-Raptor Gates Cinema Rig" data-price="390" onchange="updateGearTotal()" />
+            </label>
+          </div>
+
+        </div>
+
+        <!-- Live Rental Calculator Panel -->
+        <div class="lg:col-span-4 glass-card p-7 rounded-sm sticky top-8">
+          <span class="font-mono text-xs text-jelly uppercase tracking-widest block mb-1">Custom Rig Configurator</span>
+          <h3 class="font-display text-xl uppercase tracking-[0.15em] mb-6">Rental Estimator</h3>
+
+          <div class="mb-5">
+            <label class="font-mono text-xs text-white/60 block mb-2">EXPEDITION DURATION: <span id="days-label" class="text-biolum">7 DAYS</span></label>
+            <input
+              id="rental-days"
+              type="range"
+              min="1"
+              max="14"
+              value="7"
+              oninput="updateGearTotal()"
+              class="w-full accent-cyan-400 cursor-pointer"
+            />
+          </div>
+
+          <div id="selected-gear-list" class="space-y-2 py-4 border-y border-white/10 font-mono text-xs min-h-[72px]">
+            <!-- Populated via JS -->
+          </div>
+
+          <div class="pt-5 flex items-baseline justify-between">
+            <span class="font-mono text-xs text-white/50">ESTIMATED RIG TOTAL</span>
+            <span id="gear-total-price" class="font-display text-3xl text-white">$455</span>
+          </div>
+          <p class="text-[11px] text-white/40 mt-2 mb-6">
+            Includes unlimited Sofnolime 797 scrubber fills, helium top-offs, and technician bench prep.
+          </p>
+          <a
+            href="#inquiries"
+            class="block text-center w-full py-3 border border-white/80 font-display text-xs tracking-[0.22em] uppercase hover:bg-white hover:text-abyss-950 transition"
+          >
+            Attach Rig to Inquiry
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       6. INTERACTIVE GALLERY / THE LOGBOOK
+  ====================================================================== -->
+  <section id="logbook" class="py-24 sm:py-32 px-6 sm:px-12 max-w-7xl mx-auto">
+    <div class="flex flex-col lg:flex-row lg:items-end justify-between mb-12 gap-6">
+      <div>
+        <span class="text-biolum font-mono text-xs uppercase tracking-[0.3em] block mb-3">
+          06 // Verified Visual Telemetry
+        </span>
+        <h2 class="font-display font-light text-3xl sm:text-5xl uppercase tracking-[0.18em]">
+          The Abyssal Logbook
+        </h2>
+      </div>
+
+      <!-- Depth Scrubber Slider -->
+      <div class="glass-card px-6 py-4 rounded-sm w-full lg:w-96">
+        <div class="flex justify-between font-mono text-xs mb-2">
+          <span class="text-white/60">FILTER BY DEPTH ZONE:</span>
+          <span id="depth-readout" class="text-biolum">ALL (0m – 1,000m)</span>
+        </div>
+        <input
+          id="depth-slider"
+          type="range"
+          min="0"
+          max="1000"
+          step="100"
+          value="1000"
+          oninput="filterGalleryByDepth(this.value)"
+          class="w-full accent-cyan-400 cursor-pointer"
+        />
+        <div class="flex justify-between font-mono text-[10px] text-white/35 mt-1">
+          <span>0m Epipelagic</span>
+          <span>200m Mesopelagic</span>
+          <span>1000m Midnight</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gallery Grid -->
+    <div id="logbook-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      
+      <!-- Log Item 1 -->
+      <div
+        onclick="openLogModal(0)"
+        class="log-item group relative h-80 rounded-sm overflow-hidden cursor-pointer border border-white/10 hover:border-biolum transition"
+        data-depth="180"
+      >
+        <img
+          src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80"
+          alt="Chrysaora Fuscescens Jellyfish"
+          class="w-full h-full object-cover group-hover:scale-110 transition duration-700"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-abyss-950 via-abyss-950/20 to-transparent"></div>
+        <div class="absolute bottom-5 left-5 right-5 flex items-end justify-between">
+          <div>
+            <span class="font-mono text-xs text-jelly block">LOG #409 • -180m</span>
+            <h3 class="font-display text-base uppercase tracking-wider">Chrysaora Bioluminescence</h3>
+          </div>
+          <span class="px-2.5 py-1 border border-white/30 text-[10px] font-mono uppercase group-hover:bg-white group-hover:text-abyss-950 transition">Inspect</span>
+        </div>
+      </div>
+
+      <!-- Log Item 2 -->
+      <div
+        onclick="openLogModal(1)"
+        class="log-item group relative h-80 rounded-sm overflow-hidden cursor-pointer border border-white/10 hover:border-biolum transition"
+        data-depth="420"
+      >
+        <img
+          src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=900&q=80"
+          alt="Mesopelagic Thermocline Drop-off"
+          class="w-full h-full object-cover group-hover:scale-110 transition duration-700"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-abyss-950 via-abyss-950/20 to-transparent"></div>
+        <div class="absolute bottom-5 left-5 right-5 flex items-end justify-between">
+          <div>
+            <span class="font-mono text-xs text-biolum block">LOG #412 • -420m</span>
+            <h3 class="font-display text-base uppercase tracking-wider">Palau Vertical Halocline</h3>
+          </div>
+          <span class="px-2.5 py-1 border border-white/30 text-[10px] font-mono uppercase group-hover:bg-white group-hover:text-abyss-950 transition">Inspect</span>
+        </div>
+      </div>
+
+      <!-- Log Item 3 -->
+      <div
+        onclick="openLogModal(2)"
+        class="log-item group relative h-80 rounded-sm overflow-hidden cursor-pointer border border-white/10 hover:border-biolum transition"
+        data-depth="890"
+      >
+        <img
+          src="https://images.unsplash.com/photo-1583212292454-1fe6229603b7?auto=format&fit=crop&w=900&q=80"
+          alt="Benthic Submersible Illumination"
+          class="w-full h-full object-cover group-hover:scale-110 transition duration-700"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-abyss-950 via-abyss-950/20 to-transparent"></div>
+        <div class="absolute bottom-5 left-5 right-5 flex items-end justify-between">
+          <div>
+            <span class="font-mono text-xs text-biolum block">LOG #419 • -890m</span>
+            <h3 class="font-display text-base uppercase tracking-wider">Mariana Basalt Ridge</h3>
+          </div>
+          <span class="px-2.5 py-1 border border-white/30 text-[10px] font-mono uppercase group-hover:bg-white group-hover:text-abyss-950 transition">Inspect</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       7. DIRECT INQUIRIES & LUXURY FOOTER
+  ====================================================================== -->
+  <section id="inquiries" class="py-24 sm:py-32 bg-abyss-950 border-t border-white/10">
+    <div class="max-w-4xl mx-auto px-6 sm:px-12">
+      <div class="text-center mb-14">
+        <span class="text-biolum font-mono text-xs uppercase tracking-[0.35em] block mb-3">
+          07 // Private Charter Desk
+        </span>
+        <h2 class="font-display font-light text-3xl sm:text-5xl uppercase tracking-[0.2em] mb-4">
+          Commission Your Descent
+        </h2>
+        <p class="text-sm text-white/60 max-w-xl mx-auto">
+          Direct satellite dispatch to our Expedition Director aboard <span class="text-white">M/Y Abyssal Sovereign</span>. All charters include private helicopter or seaplane transfer.
+        </p>
+      </div>
+
+      <form id="charter-form" onsubmit="handleCharterSubmit(event)" class="glass-card p-8 sm:p-12 rounded-sm space-y-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div>
+            <label class="block font-mono text-xs uppercase text-white/60 mb-2">Full Name / Callsign *</label>
+            <input
+              type="text"
+              required
+              placeholder="Commander Elena Vance"
+              class="w-full bg-abyss-950/90 border border-white/20 px-4 py-3 text-sm text-white focus:border-biolum focus:outline-none"
+            />
+          </div>
+          <div>
+            <label class="block font-mono text-xs uppercase text-white/60 mb-2">Encrypted Email / Sat-Mail *</label>
+            <input
+              type="email"
+              required
+              placeholder="vance@orbital-expeditions.org"
+              class="w-full bg-abyss-950/90 border border-white/20 px-4 py-3 text-sm text-white focus:border-biolum focus:outline-none"
+            />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div>
+            <label class="block font-mono text-xs uppercase text-white/60 mb-2">Target Expedition *</label>
+            <select
+              id="inquiry-expedition"
+              class="w-full bg-abyss-950/90 border border-white/20 px-4 py-3 text-sm text-white focus:border-biolum focus:outline-none"
+            >
+              <option value="Mariana Bathypelagic Descent (1,000m)">Mariana Bathypelagic Descent (1,000m)</option>
+              <option value="Raja Ampat Nocturnal Fluor-Drift (115m)">Raja Ampat Nocturnal Fluor-Drift (115m)</option>
+              <option value="Dahab Benthic Sinkhole & Arch (145m)">Dahab Benthic Sinkhole & Arch (145m)</option>
+              <option value="Tonga Trench Hadal Rim Survey (1,000m)">Tonga Trench Hadal Rim Survey (1,000m)</option>
+              <option value="Bespoke Full-Yacht Charter">Bespoke Full-Yacht Charter</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-mono text-xs uppercase text-white/60 mb-2">Certification Agency & Level</label>
+            <select class="w-full bg-abyss-950/90 border border-white/20 px-4 py-3 text-sm text-white focus:border-biolum focus:outline-none">
+              <option>Submersible Passenger (No Cert Required)</option>
+              <option>GUE Tech 1 / Tech 2</option>
+              <option>TDI Full Cave / Mixed Gas CCR</option>
+              <option>PADI TecRec 100 Trimix</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-mono text-xs uppercase text-white/60 mb-2">Preferred Gas / Mode</label>
+            <select class="w-full bg-abyss-950/90 border border-white/20 px-4 py-3 text-sm text-white focus:border-biolum focus:outline-none">
+              <option>1 ATM Acrylic Submersible</option>
+              <option>Hypoxic Trimix (10/70) CCR</option>
+              <option>Heliox 14/65 Open-Circuit</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-mono text-xs uppercase text-white/60 mb-2">Mission Objectives & Medical / Decompression Notes</label>
+          <textarea
+            rows="3"
+            placeholder="Specify party size, preferred charter dates, underwater cinema housing requests, or custom bathymetric targets..."
+            class="w-full bg-abyss-950/90 border border-white/20 px-4 py-3 text-sm text-white focus:border-biolum focus:outline-none"
+          ></textarea>
+        </div>
+
+        <div class="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <span class="font-mono text-xs text-white/45">
+            Direct Response SLA: &lt; 4 Hours via Iridium Certus
+          </span>
+          <button
+            type="submit"
+            class="px-10 py-4 border border-white bg-transparent text-white font-display text-xs tracking-[0.28em] uppercase hover:bg-white hover:text-abyss-950 transition duration-300"
+          >
+            Transmit Dossier
+          </button>
+        </div>
+
+        <div id="form-feedback" class="hidden p-4 border border-biolum/50 bg-biolum/10 text-biolum font-mono text-xs">
+          TRANSMISSION CONFIRMED: Your expedition dossier has been routed to the bridge of M/Y Abyssal Sovereign.
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-[#010409] border-t border-white/10 py-16 px-6 sm:px-12">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-10 pb-12 border-b border-white/10">
+      <div>
+        <span class="block w-5 h-[2px] bg-white mb-2"></span>
+        <span class="font-display text-2xl tracking-[0.4em] uppercase text-white">DEEP DIVE</span>
+        <p class="text-xs text-white/50 mt-2 max-w-sm">
+          Ultra-luxury bathypelagic exploration, manned submersible charters, and closed-circuit technical diving expeditions.
+        </p>
+      </div>
+
+      <div class="flex flex-wrap gap-6 font-mono text-xs text-white/60">
+        <span class="px-3 py-1.5 border border-white/15">PADI TecRec Center #S-9941</span>
+        <span class="px-3 py-1.5 border border-white/15">DAN Industry Partner</span>
+        <span class="px-3 py-1.5 border border-white/15">DNV-GL Class Submersibles</span>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/50">
+      <p>© 2026 DEEP DIVE OCEAN EXPEDITIONS. All Rights Reserved.</p>
+      <p class="font-display tracking-[0.22em] uppercase text-white/90">
+        Developed by <span class="text-biolum font-medium">Soumyajit Halder</span>
+      </p>
+    </div>
+  </footer>
+
+  <!-- =====================================================================
+       INTERACTIVE MODAL (FOR EXPEDITION DOSSIERS & LOGBOOK ENTRIES)
+  ====================================================================== -->
+  <div id="detail-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-abyss-950/85 backdrop-blur-md">
+    <div class="glass-card max-w-xl w-full p-8 rounded-sm relative border border-biolum/40">
+      <button onclick="closeModal()" class="absolute top-5 right-5 p-2 text-white/60 hover:text-white">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+      <span id="modal-tag" class="font-mono text-xs text-biolum uppercase tracking-widest block mb-1"></span>
+      <h3 id="modal-title" class="font-display text-2xl uppercase tracking-[0.15em] mb-4"></h3>
+      <p id="modal-body" class="text-sm text-white/75 leading-relaxed mb-6"></p>
+      <div id="modal-meta" class="grid grid-cols-2 gap-4 py-4 border-y border-white/10 font-mono text-xs mb-6"></div>
+      <button onclick="closeModal()" class="w-full py-3 border border-white text-xs font-display tracking-[0.24em] uppercase hover:bg-white hover:text-abyss-950 transition">
+        Close Telemetry File
+      </button>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       JAVASCRIPT: FLASHLIGHT, MARINE SNOW, FILTERS & CALCULATOR
+  ====================================================================== -->
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // 1. HERO FLASHLIGHT TRACKING + FLOODLIGHT TOGGLE
+    const heroSection = document.getElementById('hero');
+    const flashlightOverlay = document.getElementById('flashlight-overlay');
+    const flashlightRing = document.getElementById('flashlight-ring');
+    const floodlightBtn = document.getElementById('toggle-floodlight');
+    let floodlightActive = false;
+
+    function updateFlashlightPosition(clientX, clientY) {
+      const rect = heroSection.getBoundingClientRect();
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
+      flashlightOverlay.style.setProperty('--x', `${x}px`);
+      flashlightOverlay.style.setProperty('--y', `${y}px`);
+      flashlightRing.style.setProperty('--x', `${x}px`);
+      flashlightRing.style.setProperty('--y', `${y}px`);
+    }
+
+    heroSection.addEventListener('mousemove', (e) => {
+      if (!floodlightActive) updateFlashlightPosition(e.clientX, e.clientY);
+    });
+
+    heroSection.addEventListener('touchmove', (e) => {
+      if (!floodlightActive && e.touches.length > 0) {
+        updateFlashlightPosition(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: true });
+
+    floodlightBtn.addEventListener('click', () => {
+      floodlightActive = !floodlightActive;
+      flashlightOverlay.style.opacity = floodlightActive ? '0.08' : '1';
+      flashlightRing.style.opacity = floodlightActive ? '0' : '1';
+      floodlightBtn.textContent = floodlightActive ? 'Floodlight: ON' : 'Floodlight: OFF';
+    });
+
+    // 2. FLOATING MARINE SNOW PARTICLES IN HERO
+    const canvas = document.getElementById('marine-snow');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    for (let i = 0; i < 85; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.8 + 0.4,
+        vy: Math.random() * 0.35 + 0.1,
+        vx: (Math.random() - 0.5) * 0.25,
+        alpha: Math.random() * 0.65 + 0.15
+      });
+    }
+
+    function animateMarineSnow() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.y -= p.vy;
+        p.x += p.vx;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(185, 242, 255, ${p.alpha})`;
+        ctx.fill();
+      });
+      requestAnimationFrame(animateMarineSnow);
+    }
+    animateMarineSnow();
+
+    // 3. SLIDE-OUT EXPLORE DRAWER
+    const drawer = document.getElementById('nav-drawer');
+    const panel = document.getElementById('nav-panel');
+    const openBtn = document.getElementById('open-drawer');
+    const closeBtn = document.getElementById('close-drawer');
+    const backdrop = document.getElementById('nav-backdrop');
+
+    function toggleDrawer(show) {
+      if (show) {
+        drawer.classList.remove('pointer-events-none', 'opacity-0');
+        panel.classList.remove('-translate-x-full');
+      } else {
+        drawer.classList.add('pointer-events-none', 'opacity-0');
+        panel.classList.add('-translate-x-full');
+      }
+    }
+    openBtn.addEventListener('click', () => toggleDrawer(true));
+    closeBtn.addEventListener('click', () => toggleDrawer(false));
+    backdrop.addEventListener('click', () => toggleDrawer(false));
+    document.querySelectorAll('.drawer-link').forEach(link => {
+      link.addEventListener('click', () => toggleDrawer(false));
+    });
+
+    // 4. EXPEDITION DOSSIER & LOGBOOK MODAL DATA
+    const expeditionsData = [
+      {
+        tag: "EXPEDITION DOSSIER // 1,000M SUBMERSIBLE",
+        title: "Mariana Bathypelagic Descent",
+        body: "Day 1–2: Embarkation in Guam aboard M/Y Abyssal Sovereign and multi-beam sonar mapping. Day 3–6: Four 6-hour dives inside our Triton 3300/3 acrylic sphere down basalt walls, collecting xenophyophore samples with robotic manipulator arms.",
+        meta: [["MAX PRESSURE", "101 ATM (Inside: 1 ATM)"], ["SUPPORT VESSEL", "M/Y Abyssal Sovereign"], ["LIFE SUPPORT", "96-Hour O2 Reserve"], ["PILOT CREW", "Ex-Navy Deep Submariner"]]
+      },
+      {
+        tag: "EXPEDITION DOSSIER // 115M CCR DRIFT",
+        title: "Raja Ampat Nocturnal Drift",
+        body: "Explore the nutrient-rich upwellings of the Dampier Strait after dusk. Using 450nm royal-blue excitation torches and yellow barrier filters, witness deep gorgonian walls, walking epakro sharks, and glowing pelagic jellyfish.",
+        meta: [["GAS BLEND", "Trimix 12/60 Diluent"], ["DECO HABITAT", "Submerged 6m O2 Station"], ["WATER VISIBILITY", "35m – 50m"], ["MAX GROUP SIZE", "4 CCR Divers"]]
+      },
+      {
+        tag: "EXPEDITION DOSSIER // 145M TECHNICAL ARCH",
+        title: "Dahab Benthic Sinkhole & Arch",
+        body: "A precision technical progression culminating in the 145-meter canyon floor below the Red Sea's famous Blue Hole Arch. Full surface-supplied oxygen decompression stations and dedicated safety scooter teams.",
+        meta: [["GAS BLEND", "Heliox 10/70"], ["RUN TIME", "210 Minutes Total"], ["CHAMBER PROXIMITY", "On-Site Mobile Unit"], ["GUIDE RATIO", "1:1 Technical Trainer"]]
+      }
+    ];
+
+    const logbookData = [
+      {
+        tag: "LOGBOOK TELEMETRY #409 // GPS: 00°32'S 130°28'E",
+        title: "Chrysaora Bioluminescence (-180m)",
+        body: "Captured during slack tide on a closed-circuit rebreather with zero bubble acoustics. Specimen exhibited rhythmic bioluminescent cascades along its marginal tentacles when stimulated by mesopelagic copepod swarms.",
+        meta: [["DEPTH RECORDED", "180.4 Meters"], ["WATER TEMP", "15.2°C"], ["GAS MIX", "Heliox 11/65"], ["BIOLOGIST", "Dr. Aris Thorne"]]
+      },
+      {
+        tag: "LOGBOOK TELEMETRY #412 // GPS: 07°08'N 134°22'E",
+        title: "Palau Vertical Halocline (-420m)",
+        body: "Observed from the acrylic viewport of Triton 3300/3. A sharp density gradient at 420 meters trapped suspended marine snow, creating an ethereal horizontal cloud layer illuminated by our 15,000-lumen HID array.",
+        meta: [["DEPTH RECORDED", "420.0 Meters"], ["WATER TEMP", "8.7°C"], ["MODE", "1 ATM Submersible"], ["VISIBILITY", "52.0 Meters"]]
+      },
+      {
+        tag: "LOGBOOK TELEMETRY #419 // GPS: 11°21'N 142°12'E",
+        title: "Mariana Basalt Ridge (-890m)",
+        body: "Benthic touchdown along volcanic pillow basalts. Encountered two 4-meter bluntnose sixgill sharks circling our bait lander alongside translucent holothurians.",
+        meta: [["DEPTH RECORDED", "890.2 Meters"], ["WATER TEMP", "3.1°C"], ["CHAMBER PRESSURE", "1.0 ATM Constant"], ["BOTTOM TIME", "245 Minutes"]]
+      }
+    ];
+
+    function showModalContent(item) {
+      document.getElementById('modal-tag').textContent = item.tag;
+      document.getElementById('modal-title').textContent = item.title;
+      document.getElementById('modal-body').textContent = item.body;
+      const metaContainer = document.getElementById('modal-meta');
+      metaContainer.innerHTML = item.meta.map(([k, v]) => `
+        <div>
+          <span class="text-white/40 block">${k}</span>
+          <span class="text-white">${v}</span>
+        </div>
+      `).join('');
+      const modal = document.getElementById('detail-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function openExpeditionModal(idx) {
+      showModalContent(expeditionsData[idx]);
+    }
+    function openLogModal(idx) {
+      showModalContent(logbookData[idx]);
+    }
+    function closeModal() {
+      const modal = document.getElementById('detail-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    // 5. CALENDAR FILTER & RESERVE PRE-FILL
+    function filterCalendar(cat) {
+      document.querySelectorAll('.cal-filter-btn').forEach(btn => {
+        const active = btn.dataset.filter === cat;
+        btn.className = active
+          ? 'cal-filter-btn px-4 py-1.5 text-xs font-mono uppercase border border-biolum bg-biolum/15 text-biolum transition'
+          : 'cal-filter-btn px-4 py-1.5 text-xs font-mono uppercase border border-white/15 text-white/70 hover:border-white/40 transition';
+      });
+      document.querySelectorAll('.cal-row').forEach(row => {
+        row.style.display = (cat === 'all' || row.dataset.category === cat) ? 'flex' : 'none';
+      });
+    }
+
+    function selectExpeditionForInquiry(label) {
+      const select = document.getElementById('inquiry-expedition');
+      const opt = document.createElement('option');
+      opt.value = label;
+      opt.textContent = label;
+      opt.selected = true;
+      select.appendChild(opt);
+      document.getElementById('inquiries').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // 6. FLEET TABS
+    const fleetInfo = [
+      {
+        badge: "68-Meter Ice-Class Support Yacht",
+        title: "M/Y Abyssal Sovereign",
+        desc: "Custom-built in Norway and refitted for ultra-luxury oceanographic exploration. Features dynamic positioning (DP2), an A-frame hydraulic submersible launch hangar, a wet-porch trimix blending lab, and six panoramic owner-grade staterooms.",
+        img: "https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?auto=format&fit=crop&w=1400&q=85",
+        s1: "6,500 Nautical Miles",
+        s2: "12 Guests / 22 Crew",
+        s3: "Continuous Heliox / O2",
+        s4: "Kongsberg EM 2040"
+      },
+      {
+        badge: "1,000-Meter Acrylic-Hulled Submersible",
+        title: "Triton 3300/3 MKII",
+        desc: "Featuring the world's thickest distortion-free 360-degree spherical acrylic pressure hull. Guests descend in climate-controlled leather seating at 1 ATM pressure with 7-function Schilling robotic sampling arms and 120,000 lumens of LED cinema lighting.",
+        img: "https://images.unsplash.com/photo-1583212292454-1fe6229603b7?auto=format&fit=crop&w=1400&q=85",
+        s1: "1,000 Meters (3,300 ft)",
+        s2: "1 Pilot + 2 Observers",
+        s3: "12 Hours + 96h Reserve",
+        s4: "6x 40,000lm Matrix LED"
+      }
+    ];
+
+    function switchFleetTab(idx) {
+      const f = fleetInfo[idx];
+      document.getElementById('fleet-badge').textContent = f.badge;
+      document.getElementById('fleet-title').textContent = f.title;
+      document.getElementById('fleet-desc').textContent = f.desc;
+      document.getElementById('fleet-img').src = f.img;
+      document.getElementById('fleet-spec-1').textContent = f.s1;
+      document.getElementById('fleet-spec-2').textContent = f.s2;
+      document.getElementById('fleet-spec-3').textContent = f.s3;
+      document.getElementById('fleet-spec-4').textContent = f.s4;
+
+      const t0 = document.getElementById('fleet-tab-0');
+      const t1 = document.getElementById('fleet-tab-1');
+      if (idx === 0) {
+        t0.className = "flex-1 py-5 px-6 font-display text-xs sm:text-sm uppercase tracking-[0.2em] bg-biolum/15 text-biolum border-b-2 border-biolum transition";
+        t1.className = "flex-1 py-5 px-6 font-display text-xs sm:text-sm uppercase tracking-[0.2em] text-white/60 hover:text-white transition";
+      } else {
+        t1.className = "flex-1 py-5 px-6 font-display text-xs sm:text-sm uppercase tracking-[0.2em] bg-biolum/15 text-biolum border-b-2 border-biolum transition";
+        t0.className = "flex-1 py-5 px-6 font-display text-xs sm:text-sm uppercase tracking-[0.2em] text-white/60 hover:text-white transition";
+      }
+    }
+
+    // 7. EQUIPMENT FILTER & RENTAL CALCULATOR
+    function filterGear(cat) {
+      document.querySelectorAll('.gear-filter-btn').forEach(btn => {
+        const active = btn.dataset.gear === cat;
+        btn.className = active
+          ? 'gear-filter-btn px-4 py-1.5 text-xs font-mono uppercase border border-biolum bg-biolum/15 text-biolum transition'
+          : 'gear-filter-btn px-4 py-1.5 text-xs font-mono uppercase border border-white/15 text-white/70 hover:border-white/40 transition';
+      });
+      document.querySelectorAll('.gear-card').forEach(card => {
+        card.style.display = (cat === 'all' || card.dataset.category === cat) ? 'flex' : 'none';
+      });
+    }
+
+    function updateGearTotal() {
+      const days = parseInt(document.getElementById('rental-days').value, 10);
+      document.getElementById('days-label').textContent = `${days} DAY${days > 1 ? 'S' : ''}`;
+      const listEl = document.getElementById('selected-gear-list');
+      let dailySum = 0;
+      const itemsHtml = [];
+
+      document.querySelectorAll('.gear-checkbox:checked').forEach(cb => {
+        const price = parseInt(cb.dataset.price, 10);
+        dailySum += price;
+        itemsHtml.push(`
+          <div class="flex justify-between text-white/80">
+            <span>${cb.dataset.name}</span>
+            <span class="text-biolum">$${price * days}</span>
+          </div>
+        `);
+      });
+
+      listEl.innerHTML = itemsHtml.length
+        ? itemsHtml.join('')
+        : '<span class="text-white/35">Select hardware cards on the left to calculate your custom charter kit.</span>';
+
+      document.getElementById('gear-total-price').textContent = `$${(dailySum * days).toLocaleString()}`;
+    }
+    updateGearTotal();
+
+    // 8. LOGBOOK DEPTH SCRUBBER
+    function filterGalleryByDepth(maxDepth) {
+      const d = parseInt(maxDepth, 10);
+      document.getElementById('depth-readout').textContent = d === 1000 ? 'ALL (0m – 1,000m)' : `0m – ${d}m MAX`;
+      document.querySelectorAll('.log-item').forEach(card => {
+        const itemDepth = parseInt(card.dataset.depth, 10);
+        card.style.display = itemDepth <= d ? 'block' : 'none';
+      });
+    }
+
+    // 9. CHARTER FORM SUBMISSION
+    function handleCharterSubmit(e) {
+      e.preventDefault();
+      const feedback = document.getElementById('form-feedback');
+      feedback.classList.remove('hidden');
+      e.target.reset();
+    }
+  </script>
+</body>
+</html>

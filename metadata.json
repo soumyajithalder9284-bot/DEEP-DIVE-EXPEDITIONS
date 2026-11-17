@@ -1,0 +1,6 @@
+{
+  "name": "DEEP DIVE — Abyssal Expeditions",
+  "description": "Luxury manned submersible charters, closed-circuit technical diving expeditions, and oceanographic exploration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
